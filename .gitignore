@@ -15,5 +15,7 @@ game.db
 .DS_Store
 Thumbs.db
 
-.trae/
+.trae/*
+!.trae/documents/
+!.trae/documents/*.md
 
