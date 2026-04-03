@@ -93,6 +93,75 @@
         align-items: center;
       }
 
+      .upgradeTip {
+        position: absolute;
+        top: 54px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: rgba(15, 22, 39, 0.82);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: rgba(255, 235, 120, 0.96);
+        font-size: 13px;
+        font-weight: 750;
+        letter-spacing: 0.2px;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 120ms ease, transform 120ms ease;
+      }
+
+      body.upgradeMode .upgradeTip {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0px);
+      }
+
+      body.upgradeMode {
+        cursor: pointer;
+      }
+
+      .grid.upgradeMode .cell {
+        outline: 1px solid rgba(255, 235, 120, 0.14);
+      }
+
+      .xpHud {
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: grid;
+        gap: 6px;
+        width: min(520px, calc(100% - 32px));
+        pointer-events: none;
+      }
+
+      .xpHud .row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 750;
+        font-size: 13px;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+      }
+
+      .xpBar {
+        height: 12px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .xpBar .fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, rgba(55, 210, 115, 0.9), rgba(90, 228, 168, 0.92));
+        border-radius: 999px;
+        transition: width 140ms linear;
+      }
+
       .mid {
         background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0) 100%),
           var(--panel);
@@ -172,11 +241,7 @@
         color: rgba(255, 255, 255, 0.95);
         border: 1px solid rgba(0, 0, 0, 0.25);
         box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
-        cursor: grab;
-      }
-
-      .tower:active {
-        cursor: grabbing;
+        cursor: default;
       }
 
       .tower .sub {
@@ -186,23 +251,6 @@
         font-size: 11px;
         opacity: 0.85;
         font-weight: 700;
-      }
-
-      .towerGhost {
-        position: fixed;
-        width: 84px;
-        height: 84px;
-        border-radius: 14px;
-        pointer-events: none;
-        display: grid;
-        place-items: center;
-        font-weight: 800;
-        font-size: 22px;
-        color: rgba(255, 255, 255, 0.95);
-        box-shadow: 0 18px 42px rgba(0, 0, 0, 0.45);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        transform: translate(-9999px, -9999px);
-        z-index: 9999;
       }
 
       .bottom {
@@ -268,6 +316,21 @@
         border-color: rgba(90, 228, 168, 0.6);
       }
 
+      button.upgrade {
+        background: rgba(255, 235, 120, 0.12);
+        border-color: rgba(255, 235, 120, 0.42);
+      }
+
+      button.upgrade:hover {
+        background: rgba(255, 235, 120, 0.18);
+        border-color: rgba(255, 235, 120, 0.58);
+      }
+
+      button.upgrade.active {
+        background: rgba(255, 235, 120, 0.22);
+        border-color: rgba(255, 235, 120, 0.72);
+      }
+
       button.danger {
         background: rgba(255, 90, 106, 0.14);
         border-color: rgba(255, 90, 106, 0.4);
@@ -277,6 +340,95 @@
         cursor: not-allowed;
         opacity: 0.55;
         transform: none;
+      }
+
+      .levelUpFx {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        display: grid;
+        place-items: center;
+      }
+
+      .levelUpFx .ring {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        border: 2px solid rgba(255, 255, 255, 0.95);
+        box-shadow: 0 0 14px rgba(255, 255, 255, 0.45);
+        animation: levelUpRing 520ms ease-out forwards;
+      }
+
+      .levelUpFx .beam {
+        position: absolute;
+        left: 50%;
+        top: 8px;
+        bottom: 8px;
+        width: 10px;
+        transform: translateX(-50%);
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0),
+          rgba(255, 255, 255, 0.92),
+          rgba(255, 255, 255, 0)
+        );
+        filter: blur(0.2px);
+        animation: levelUpBeam 520ms ease-out forwards;
+      }
+
+      .levelUpFx .label {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: rgba(255, 255, 255, 0.98);
+        font-weight: 900;
+        font-size: 12px;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
+        letter-spacing: 0.4px;
+        animation: levelUpLabel 620ms ease-out forwards;
+      }
+
+      @keyframes levelUpRing {
+        0% {
+          transform: scale(1);
+          opacity: 0.95;
+        }
+        100% {
+          transform: scale(14);
+          opacity: 0;
+        }
+      }
+
+      @keyframes levelUpBeam {
+        0% {
+          opacity: 0;
+          transform: translateX(-50%) scaleY(0.4);
+        }
+        20% {
+          opacity: 0.95;
+          transform: translateX(-50%) scaleY(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translateX(-50%) scaleY(1.05);
+        }
+      }
+
+      @keyframes levelUpLabel {
+        0% {
+          opacity: 0;
+          transform: translateX(-50%) translateY(6px);
+        }
+        30% {
+          opacity: 1;
+          transform: translateX(-50%) translateY(0px);
+        }
+        100% {
+          opacity: 0;
+          transform: translateX(-50%) translateY(-10px);
+        }
       }
 
       .toast {
@@ -348,11 +500,6 @@
           height: 360px;
         }
 
-        .towerGhost {
-          width: 72px;
-          height: 72px;
-        }
-
         .tower {
           font-size: 20px;
         }
@@ -369,12 +516,19 @@
               <div class="pill" id="hudLeft">状态：运行中</div>
               <div class="pill" id="hudRight">难度：1.00 · 生成间隔：900ms</div>
             </div>
+            <div class="xpHud" id="xpHud">
+              <div class="row">
+                <span id="playerLevelLabel">Player Level: 1</span>
+              </div>
+              <div class="xpBar"><div class="fill" id="xpFill"></div></div>
+            </div>
+            <div class="upgradeTip" id="upgradeTip">请选择一个操作</div>
             <div class="overlay" id="overlay">
               <div class="card">
                 <h3>失败</h3>
                 <p id="overText">有敌人突破了防线。</p>
                 <div class="row">
-                  <span style="color: var(--muted); font-size: 12px">提示：拖拽同等级塔合成升级</span>
+                  <span style="color: var(--muted); font-size: 12px">提示：通过经验升级获得升级点，放置/升级武器</span>
                   <button id="restartBtn2" class="primary">重开</button>
                 </div>
               </div>
@@ -385,20 +539,21 @@
         <div class="mid">
           <div class="gridHead">
             <h2>塔防网格（5×5）</h2>
-            <div class="hint">拖拽移动，拖到同等级塔上合成升级</div>
+            <div class="hint">升级后获得升级点，点击按钮后在网格放置或升级武器</div>
           </div>
           <div class="grid" id="grid"></div>
         </div>
 
         <div class="bottom">
           <div class="stats">
-            <span><span class="k">金币</span>：<span id="gold">100</span></span>
             <span><span class="k">分数</span>：<span id="score">0</span></span>
             <span><span class="k">击杀</span>：<span id="kills">0</span></span>
             <span><span class="k">波次</span>：<span id="wave">1</span></span>
+            <span><span class="k">升级点</span>：<span id="upgradePoints">0</span></span>
           </div>
           <div class="actions">
-            <button id="buyBtn" class="primary">购买防御塔（10）</button>
+            <button id="placeBtn" class="primary" disabled>放置新武器 (消耗 1 升级点)</button>
+            <button id="upgradeBtn" class="upgrade" disabled>升级现有武器 (消耗 1 升级点)</button>
             <button id="saveBtn">保存游戏</button>
             <button id="pauseBtn">暂停</button>
             <button id="restartBtn" class="danger">重开</button>
@@ -407,15 +562,20 @@
       </div>
     </div>
 
-    <div class="towerGhost" id="towerGhost">1</div>
     <div class="toast" id="toast"></div>
 
     <script>
       const GRID_SIZE = 5;
-      let BUY_COST = 10;
-      let START_GOLD = 100;
+      let START_GOLD = 0;
       const API_BASE = "http://127.0.0.1:8000";
       let gameConfig = null;
+
+      let playerLevel = 1;
+      let playerXp = 0;
+      let upgradePoints = 1;
+      let xpToNextLevels = [100, 250, 500, 1000, 2000];
+      let isPlacingMode = false;
+      let isUpgradingMode = false;
 
       const battleCanvas = document.getElementById("battle");
       const ctx = battleCanvas.getContext("2d");
@@ -426,18 +586,22 @@
       const overlayEl = document.getElementById("overlay");
       const overTextEl = document.getElementById("overText");
 
-      const goldEl = document.getElementById("gold");
       const scoreEl = document.getElementById("score");
       const killsEl = document.getElementById("kills");
       const waveEl = document.getElementById("wave");
-      const buyBtn = document.getElementById("buyBtn");
+      const upgradePointsEl = document.getElementById("upgradePoints");
+      const placeBtn = document.getElementById("placeBtn");
+      const upgradeBtn = document.getElementById("upgradeBtn");
       const saveBtn = document.getElementById("saveBtn");
       const pauseBtn = document.getElementById("pauseBtn");
       const restartBtn = document.getElementById("restartBtn");
       const restartBtn2 = document.getElementById("restartBtn2");
 
-      const towerGhostEl = document.getElementById("towerGhost");
       const toastEl = document.getElementById("toast");
+      const upgradeTipEl = document.getElementById("upgradeTip");
+      const playerLevelLabelEl = document.getElementById("playerLevelLabel");
+      const xpFillEl = document.getElementById("xpFill");
+      const xpHudEl = document.getElementById("xpHud");
 
       function clamp(v, min, max) {
         return Math.max(min, Math.min(max, v));
@@ -489,6 +653,9 @@
             fireRate: Number(t.fire_rate) || 1,
             bulletSpeed: Number(t.bullet_speed) || 520,
             range: 99999,
+            splashRadius: Math.max(0, Number(t.splash_radius) || 0),
+            critRate: clamp(Number(t.crit_rate) || 0, 0, 1),
+            critMultiplier: Math.max(1, Number(t.crit_multiplier) || 1),
           };
         }
         return {
@@ -496,31 +663,88 @@
           fireRate: 0.65 + lv * 0.25,
           bulletSpeed: 520 + lv * 35,
           range: 99999,
+          splashRadius: lv >= 3 ? 10 + lv * 15 : 0,
+          critRate: clamp(0.04 + lv * 0.03, 0, 1),
+          critMultiplier: Math.max(1, 1.35 + lv * 0.15),
         };
       }
 
       function getWaveConfig(wave) {
         const ws = gameConfig?.waves ?? [];
         if (!ws.length) {
+          const isBoss = wave % 5 === 0;
+          const baseHp = 3 + (wave - 1) * 1;
+          const baseSpeed = 55 + (wave - 1) * 2.4;
+          const baseXp = 8 + wave * 3;
           return {
             wave,
             spawn_interval_ms: 900,
-            enemy_hp: 3,
-            enemy_speed: 55,
-            kill_reward: 1,
+            enemy_hp: isBoss ? Math.floor(baseHp * 22) : baseHp,
+            enemy_speed: isBoss ? baseSpeed * 0.5 : baseSpeed,
+            kill_reward: isBoss ? 50 : 1,
+            enemy_count: isBoss ? 1 : 18,
+            is_boss: isBoss,
+            xp_drop: isBoss ? Math.floor(baseXp * 25) : baseXp,
           };
         }
         const idx = clamp(wave - 1, 0, ws.length - 1);
         return ws[idx];
       }
 
-      function computeWaveFromTimeSec(timeSec) {
-        const dur = gameConfig?.meta?.wave_duration_sec ?? 12;
-        return 1 + Math.floor(timeSec / dur);
+      function getXpNeeded(level) {
+        const lv = Math.max(1, Math.floor(Number(level) || 1));
+        if (lv <= xpToNextLevels.length) return Number(xpToNextLevels[lv - 1]) || 100;
+        const base = Number(xpToNextLevels[xpToNextLevels.length - 1]) || 2000;
+        const extra = lv - xpToNextLevels.length;
+        return Math.round(base * Math.pow(1.25, extra));
       }
 
-      function updateBuyButtonLabel() {
-        buyBtn.textContent = `购买防御塔（${BUY_COST}）`;
+      function refreshXpUi() {
+        const need = getXpNeeded(playerLevel);
+        const p = need > 0 ? clamp(playerXp / need, 0, 1) : 0;
+        xpFillEl.style.width = `${Math.round(p * 100)}%`;
+        playerLevelLabelEl.textContent = `Player Level: ${playerLevel}`;
+      }
+
+      function addXp(amount) {
+        let v = Math.max(0, Math.floor(Number(amount) || 0));
+        if (v <= 0) return;
+        playerXp += v;
+        while (playerXp >= getXpNeeded(playerLevel)) {
+          playerXp -= getXpNeeded(playerLevel);
+          playerLevel += 1;
+          upgradePoints += 1;
+          showToast("LEVEL UP!");
+        }
+      }
+
+      function updateModeUi() {
+        const active = isPlacingMode || isUpgradingMode;
+        document.body.classList.toggle("upgradeMode", active);
+        battleCanvas.style.cursor = active ? "pointer" : "default";
+
+        placeBtn.classList.toggle("active", isPlacingMode);
+        upgradeBtn.classList.toggle("active", isUpgradingMode);
+
+        if (!active) {
+          upgradeTipEl.style.opacity = "0";
+          return;
+        }
+
+        upgradeTipEl.style.opacity = "1";
+        upgradeTipEl.textContent = isPlacingMode ? "请点击空地放置新武器" : "请点击要升级的防御塔";
+      }
+
+      function setPlacingMode(on) {
+        isPlacingMode = Boolean(on);
+        if (isPlacingMode) isUpgradingMode = false;
+        updateModeUi();
+      }
+
+      function setUpgradingMode(on) {
+        isUpgradingMode = Boolean(on);
+        if (isUpgradingMode) isPlacingMode = false;
+        updateModeUi();
       }
 
       function buildGridData2D() {
@@ -560,10 +784,43 @@
 
         enemies: [],
         bullets: [],
+        xpOrbs: [],
+        floatingTexts: [],
+        explosions: [],
+
+        waveCfg: null,
+        wavePhase: "spawning",
+        wavePhaseMs: 0,
+        waveSpawned: 0,
+        waveToSpawn: 0,
+        bossWarningT: 0,
 
         spawnIntervalMs: 900,
         spawnTimerMs: 0,
       };
+
+      function startWave(wave) {
+        state.wave = Math.max(1, Math.floor(Number(wave) || 1));
+        state.highestWave = Math.max(state.highestWave, state.wave);
+
+        const cfg = getWaveConfig(state.wave);
+        const isBoss = Boolean(cfg?.is_boss);
+
+        state.waveCfg = cfg;
+        state.waveSpawned = 0;
+        state.waveToSpawn = Math.max(1, Math.floor(Number(cfg?.enemy_count) || (isBoss ? 1 : 18)));
+        state.spawnIntervalMs = Math.max(80, Math.floor(Number(cfg?.spawn_interval_ms) || 900));
+        state.spawnTimerMs = 200;
+
+        if (isBoss) {
+          state.wavePhase = "warning";
+          state.wavePhaseMs = 2000;
+          state.bossWarningT = 0;
+        } else {
+          state.wavePhase = "spawning";
+          state.wavePhaseMs = 0;
+        }
+      }
 
       function resetGame() {
         state.running = true;
@@ -571,7 +828,12 @@
         overlayEl.classList.remove("show");
         state.startedAt = performance.now();
         state.timeSec = 0;
-        state.gold = START_GOLD;
+        playerLevel = 1;
+        playerXp = 0;
+        upgradePoints = 1;
+        setPlacingMode(false);
+        setUpgradingMode(false);
+        state.gold = 0;
         state.score = 0;
         state.kills = 0;
         state.wave = 1;
@@ -580,8 +842,12 @@
         state.grid = Array.from({ length: GRID_SIZE * GRID_SIZE }, () => null);
         state.enemies = [];
         state.bullets = [];
-        state.spawnIntervalMs = getWaveConfig(1).spawn_interval_ms;
-        state.spawnTimerMs = 120;
+        state.xpOrbs = [];
+        state.floatingTexts = [];
+        state.explosions = [];
+        startWave(1);
+        state.wavePhase = "prep";
+        state.wavePhaseMs = 2500;
         syncUI();
       }
 
@@ -595,10 +861,9 @@
       }
 
       function getTowerWorldPos(index) {
-        const { c } = indexToRC(index);
-        const x = ((c + 0.5) / GRID_SIZE) * battleCanvas.width;
-        const y = battleCanvas.height - 10;
-        return { x, y };
+        const { r, c } = indexToRC(index);
+        const a = getGridArea();
+        return { x: a.x + (c + 0.5) * a.cell, y: a.y + (r + 0.5) * a.cell };
       }
 
       function createTower(level) {
@@ -618,30 +883,13 @@
         return out;
       }
 
-      function buyTower() {
-        if (state.gameOver) return;
-        if (state.gold < BUY_COST) {
-          showToast("金币不足");
-          return;
-        }
-        const empties = getEmptyCells();
-        if (empties.length === 0) {
-          showToast("网格已满");
-          return;
-        }
-        state.gold -= BUY_COST;
-        const idx = pickRandom(empties);
-        state.grid[idx] = createTower(1);
-        renderGrid();
-        syncUI();
-      }
-
       function syncUI() {
-        goldEl.textContent = String(state.gold);
         scoreEl.textContent = String(state.score);
         killsEl.textContent = String(state.kills);
         waveEl.textContent = String(state.wave);
-        buyBtn.disabled = state.gold < BUY_COST || getEmptyCells().length === 0 || state.gameOver;
+        upgradePointsEl.textContent = String(upgradePoints);
+        placeBtn.disabled = upgradePoints <= 0 || getEmptyCells().length === 0 || state.gameOver;
+        upgradeBtn.disabled = upgradePoints <= 0 || state.gameOver;
         saveBtn.disabled = state.gameOver;
         pauseBtn.disabled = state.gameOver;
         hudLeftEl.textContent = state.gameOver
@@ -650,9 +898,29 @@
             ? "状态：运行中"
             : "状态：已暂停";
         hudRightEl.textContent = `波次：${state.wave} · 生成间隔：${Math.round(state.spawnIntervalMs)}ms`;
+        refreshXpUi();
       }
 
-      function renderGrid(targetIndex = null, canMerge = false) {
+      function playLevelUpFxAtIndex(index) {
+        const cell = gridEl.children?.[index];
+        if (!cell) return;
+        const fx = document.createElement("div");
+        fx.className = "levelUpFx";
+        const ring = document.createElement("div");
+        ring.className = "ring";
+        const beam = document.createElement("div");
+        beam.className = "beam";
+        const label = document.createElement("div");
+        label.className = "label";
+        label.textContent = "LEVEL UP!";
+        fx.appendChild(ring);
+        fx.appendChild(beam);
+        fx.appendChild(label);
+        cell.appendChild(fx);
+        window.setTimeout(() => fx.remove(), 700);
+      }
+
+      function renderGrid() {
         const children = gridEl.children;
         if (children.length !== GRID_SIZE * GRID_SIZE) {
           gridEl.innerHTML = "";
@@ -666,9 +934,6 @@
 
         for (let i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
           const cell = gridEl.children[i];
-          cell.classList.toggle("isTarget", targetIndex === i && !canMerge);
-          cell.classList.toggle("isMergeTarget", targetIndex === i && canMerge);
-
           const tower = state.grid[i];
           cell.innerHTML = "";
           if (tower) {
@@ -688,212 +953,72 @@
         }
       }
 
-      const drag = {
-        active: false,
-        fromIndex: -1,
-        tower: null,
-        pointerId: null,
-        pointerX: 0,
-        pointerY: 0,
-        targetIndex: null,
-        canMerge: false,
-      };
-
-      function setGhostForTower(tower) {
-        towerGhostEl.textContent = String(tower.level);
-        towerGhostEl.style.background = `linear-gradient(180deg, ${towerColor(tower.level)} 0%, ${towerColorDark(tower.level)} 100%)`;
+      function getGridArea() {
+        const w = battleCanvas.width;
+        const h = battleCanvas.height;
+        const pad = 18;
+        const maxCellW = (w - pad * 2) / GRID_SIZE;
+        const maxCellH = (h - pad * 2) / GRID_SIZE;
+        const cell = Math.floor(Math.max(32, Math.min(maxCellW, maxCellH, 88)));
+        const gridW = cell * GRID_SIZE;
+        const gridH = cell * GRID_SIZE;
+        const x = Math.floor((w - gridW) / 2);
+        const y = Math.floor(h - gridH - pad);
+        return { x, y, cell, gridW, gridH };
       }
 
-      function moveGhostTo(x, y) {
-        const rect = towerGhostEl.getBoundingClientRect();
-        const w = rect.width || 84;
-        const h = rect.height || 84;
-        towerGhostEl.style.transform = `translate(${Math.round(x - w / 2)}px, ${Math.round(y - h / 2)}px)`;
-      }
-
-      function clearGhost() {
-        towerGhostEl.style.transform = "translate(-9999px, -9999px)";
-      }
-
-      function getCellIndexFromPointer(clientX, clientY) {
-        const rect = gridEl.getBoundingClientRect();
-
-        // 拖拽“碰撞检测”核心：把指针坐标映射到网格格子索引。
-        // 1) rect 是网格在视口坐标系中的位置与尺寸
-        // 2) 若指针不在 rect 范围内，等价于“没有碰撞到任何格子”，返回 null
-        // 3) 若在范围内，把 (clientX, clientY) 转成网格内局部坐标，再换算 row/col
-        if (clientX < rect.left || clientX > rect.right || clientY < rect.top || clientY > rect.bottom) {
-          return null;
-        }
-
-        // 视口坐标 → 网格局部坐标（左上角为 0,0）
-        const localX = clientX - rect.left;
-        const localY = clientY - rect.top;
-
-        // 局部坐标按比例映射到 0..GRID_SIZE-1。
-        // 注意：我们不依赖每个格子的 DOM hit-test，而是用“几何计算”直接得到格子索引，
-        // 这样不会受格子间 gap、塔元素遮挡等影响，逻辑更稳定。
-        const col = clamp(Math.floor((localX / rect.width) * GRID_SIZE), 0, GRID_SIZE - 1);
-        const row = clamp(Math.floor((localY / rect.height) * GRID_SIZE), 0, GRID_SIZE - 1);
-
+      function canvasPointToGridIndex(x, y) {
+        const a = getGridArea();
+        if (x < a.x || x > a.x + a.gridW || y < a.y || y > a.y + a.gridH) return null;
+        const col = clamp(Math.floor((x - a.x) / a.cell), 0, GRID_SIZE - 1);
+        const row = clamp(Math.floor((y - a.y) / a.cell), 0, GRID_SIZE - 1);
         return rcToIndex(row, col);
       }
 
-      function beginDrag(fromIndex, tower, e) {
-        drag.active = true;
-        drag.fromIndex = fromIndex;
-        drag.tower = tower;
-        drag.pointerId = e.pointerId;
-        drag.pointerX = e.clientX;
-        drag.pointerY = e.clientY;
-        drag.targetIndex = null;
-        drag.canMerge = false;
+      battleCanvas.addEventListener("click", (e) => {
+        if (!isPlacingMode && !isUpgradingMode) return;
+        if (upgradePoints <= 0) return;
 
-        setGhostForTower(tower);
-        moveGhostTo(e.clientX, e.clientY);
+        const p = domPointToCanvas(e.clientX, e.clientY);
+        const idx = canvasPointToGridIndex(p.x, p.y);
+        if (idx == null) return;
 
-        // 网格状态更新（开始拖拽）：
-        // - 将“起点格”的塔临时从 grid 中移除（置为 null），让 UI 立即表现为“空位”。
-        // - 拖拽过程中，放置逻辑统一以 state.grid 为准：
-        //   - 拖到空格 => 移动
-        //   - 拖到同等级塔 => 合成
-        //   - 其他 => 回退
-        // - 若最终放置非法或取消拖拽，会在 cancelDrag() 里把塔放回 fromIndex。
-        state.grid[fromIndex] = null;
-        renderGrid();
-      }
-
-      function cancelDrag(reason) {
-        if (!drag.active) return;
-        state.grid[drag.fromIndex] = drag.tower;
-        drag.active = false;
-        drag.fromIndex = -1;
-        drag.tower = null;
-        drag.pointerId = null;
-        drag.targetIndex = null;
-        drag.canMerge = false;
-        clearGhost();
-        renderGrid();
-        if (reason === "invalid") {
-          showToast("不能放在这里");
-        }
-      }
-
-      function commitDrop() {
-        if (!drag.active) return;
-
-        const fromIndex = drag.fromIndex;
-        const tower = drag.tower;
-        const targetIndex = drag.targetIndex;
-
-        // 放置判定（核心）：targetIndex 来源于 pointermove 阶段的“碰撞检测”。
-        // - 为 null：说明松手时指针不在网格内 → 视为非法放置 → 回退到原位
-        if (targetIndex == null) {
-          cancelDrag("invalid");
+        if (isPlacingMode) {
+          if (!state.grid[idx]) {
+            state.grid[idx] = createTower(1);
+            upgradePoints = Math.max(0, upgradePoints - 1);
+            setPlacingMode(false);
+            renderGrid();
+            syncUI();
+          }
           return;
         }
 
-        if (targetIndex === fromIndex) {
-          cancelDrag("invalid");
-          return;
-        }
-
-        // 取出目标格当前的塔（如果有）。注意：起点格的塔在 beginDrag 时已经从 grid 移除了。
-        const targetTower = state.grid[targetIndex];
-
-        // 规则 1：目标为空格 → 直接移动（把拖拽塔写入目标格）
-        if (!targetTower) {
-          state.grid[targetIndex] = tower;
-          drag.active = false;
-          drag.fromIndex = -1;
-          drag.tower = null;
-          drag.pointerId = null;
-          drag.targetIndex = null;
-          drag.canMerge = false;
-          clearGhost();
-          renderGrid();
-          return;
-        }
-
-        // 规则 2：目标为同等级塔 → 合成升级。
-        // - 消耗：目标格的塔 + 拖拽塔
-        // - 结果：目标格生成 level+1 的新塔
-        if (targetTower.level === tower.level) {
-          state.grid[targetIndex] = createTower(tower.level + 1);
-          drag.active = false;
-          drag.fromIndex = -1;
-          drag.tower = null;
-          drag.pointerId = null;
-          drag.targetIndex = null;
-          drag.canMerge = false;
-          clearGhost();
-          renderGrid();
-          showToast(`合成成功：${tower.level} + ${tower.level} = ${tower.level + 1}`);
-          return;
-        }
-
-        // 规则 3：目标为不同等级塔 → 非法放置 → 回退到起点
-        cancelDrag("invalid");
-      }
-
-      gridEl.addEventListener("pointerdown", (e) => {
-        const towerEl = e.target.closest(".tower");
-        if (!towerEl) return;
-        if (state.gameOver) return;
-        if (!state.running) return;
-
-        const fromIndex = Number(towerEl.dataset.index);
-        const tower = state.grid[fromIndex];
-        if (!tower) return;
-
-        e.preventDefault();
-        towerEl.setPointerCapture(e.pointerId);
-        beginDrag(fromIndex, tower, e);
-      });
-
-      gridEl.addEventListener("pointermove", (e) => {
-        if (!drag.active) return;
-        if (e.pointerId !== drag.pointerId) return;
-        e.preventDefault();
-        drag.pointerX = e.clientX;
-        drag.pointerY = e.clientY;
-        moveGhostTo(e.clientX, e.clientY);
-
-        const idx = getCellIndexFromPointer(e.clientX, e.clientY);
-        drag.targetIndex = idx;
-
-        let canMerge = false;
-        if (idx != null) {
+        if (isUpgradingMode) {
           const t = state.grid[idx];
-          canMerge = Boolean(t && drag.tower && t.level === drag.tower.level);
+          if (!t) return;
+          const maxLv = gameConfig?.meta?.max_tower_level ?? 5;
+          if (t.level >= maxLv) return;
+          t.level += 1;
+          t.stats = getTowerStats(t.level);
+          t.fireCooldown = 0;
+          upgradePoints = Math.max(0, upgradePoints - 1);
+          setUpgradingMode(false);
+          renderGrid();
+          playLevelUpFxAtIndex(idx);
+          syncUI();
         }
-        drag.canMerge = canMerge;
-        renderGrid(idx, canMerge);
-      });
-
-      gridEl.addEventListener("pointerup", (e) => {
-        if (!drag.active) return;
-        if (e.pointerId !== drag.pointerId) return;
-        e.preventDefault();
-        commitDrop();
-        syncUI();
-      });
-
-      gridEl.addEventListener("pointercancel", (e) => {
-        if (!drag.active) return;
-        if (e.pointerId !== drag.pointerId) return;
-        e.preventDefault();
-        cancelDrag("invalid");
-        syncUI();
       });
 
       function createEnemy(waveCfg) {
-        const size = 26;
+        const isBoss = Boolean(waveCfg?.is_boss);
+        const size = isBoss ? 64 : 26;
         const x = randInt(20, battleCanvas.width - 20);
 
         const hp = Number(waveCfg.enemy_hp) || 3;
         const speed = Number(waveCfg.enemy_speed) || 55;
         const reward = Number(waveCfg.kill_reward) || 1;
+        const xpDrop = Math.max(1, Math.floor(Number(waveCfg.xp_drop) || 1));
 
         return {
           id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
@@ -904,14 +1029,59 @@
           hpMax: hp,
           speed,
           reward,
+          isBoss,
+          xpDrop,
         };
       }
 
-      function spawnEnemies(dtMs) {
-        state.spawnTimerMs -= dtMs;
-        while (state.spawnTimerMs <= 0) {
-          state.spawnTimerMs += state.spawnIntervalMs;
-          state.enemies.push(createEnemy(getWaveConfig(state.wave)));
+      function updateWaveManagement(dtMs, dtSec) {
+        if (state.wavePhase === "prep") {
+          const hasWeapon = state.grid.some(Boolean);
+          if (!hasWeapon) return;
+          state.wavePhaseMs -= dtMs;
+          if (state.wavePhaseMs <= 0) {
+            state.wavePhase = "spawning";
+            state.spawnTimerMs = 0;
+          }
+          return;
+        }
+
+        if (state.wavePhase === "warning") {
+          state.wavePhaseMs -= dtMs;
+          state.bossWarningT += dtSec;
+          if (state.wavePhaseMs <= 0) {
+            state.wavePhase = "spawning";
+            state.spawnTimerMs = 0;
+          }
+          return;
+        }
+
+        if (state.wavePhase === "spawning") {
+          state.spawnTimerMs -= dtMs;
+          while (state.spawnTimerMs <= 0 && state.waveSpawned < state.waveToSpawn) {
+            state.spawnTimerMs += state.spawnIntervalMs;
+            state.enemies.push(createEnemy(state.waveCfg ?? getWaveConfig(state.wave)));
+            state.waveSpawned += 1;
+          }
+          if (state.waveSpawned >= state.waveToSpawn) {
+            state.wavePhase = "clearing";
+          }
+          return;
+        }
+
+        if (state.wavePhase === "clearing") {
+          if (state.enemies.length === 0) {
+            state.wavePhase = "intermission";
+            state.wavePhaseMs = randInt(2000, 3000);
+          }
+          return;
+        }
+
+        if (state.wavePhase === "intermission") {
+          state.wavePhaseMs -= dtMs;
+          if (state.wavePhaseMs <= 0) {
+            startWave(state.wave + 1);
+          }
         }
       }
 
@@ -950,6 +1120,9 @@
           r: 4,
           dmg: stats.damage,
           ttl: 1.8,
+          splashRadius: stats.splashRadius || 0,
+          critRate: stats.critRate || 0,
+          critMultiplier: stats.critMultiplier || 1,
         });
 
         tower.fireCooldown = 1 / stats.fireRate;
@@ -982,22 +1155,139 @@
         state.bullets = state.bullets.filter((b) => b.ttl > 0);
       }
 
+      function domPointToCanvas(clientX, clientY) {
+        const rect = battleCanvas.getBoundingClientRect();
+        const sx = rect.width > 0 ? battleCanvas.width / rect.width : 1;
+        const sy = rect.height > 0 ? battleCanvas.height / rect.height : 1;
+        return { x: (clientX - rect.left) * sx, y: (clientY - rect.top) * sy };
+      }
+
+      function getXpTargetCanvasPos() {
+        const rect = xpHudEl.getBoundingClientRect();
+        return domPointToCanvas(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      }
+
+      function spawnXpOrb(x, y, amount) {
+        const xp = Math.max(1, Math.floor(Number(amount) || 1));
+        state.xpOrbs.push({
+          x,
+          y,
+          xp,
+        });
+      }
+
+      function updateXpOrbs(dtSec) {
+        if (!state.xpOrbs.length) return;
+        const target = getXpTargetCanvasPos();
+        const remaining = [];
+        for (const orb of state.xpOrbs) {
+          const dx = target.x - orb.x;
+          const dy = target.y - orb.y;
+          const len = Math.hypot(dx, dy) || 1;
+          const speed = 520;
+          orb.x += (dx / len) * speed * dtSec;
+          orb.y += (dy / len) * speed * dtSec;
+          if (len <= 18) {
+            addXp(orb.xp);
+          } else {
+            remaining.push(orb);
+          }
+        }
+        state.xpOrbs = remaining;
+      }
+
+      function addTextPopup(x, y, text, opts) {
+        const ttl = Math.max(0.1, Number(opts?.ttl) || 1.0);
+        state.floatingTexts.push({
+          text: String(text),
+          x,
+          y,
+          vy: Number(opts?.vy) || -65,
+          ttl,
+          life: ttl,
+          color: String(opts?.color || "rgba(255, 255, 255, 1)"),
+          fontSize: Math.max(10, Number(opts?.fontSize) || 14),
+          bold: Boolean(opts?.bold),
+        });
+      }
+
+      function addFloatingText(x, y, amount, isCrit) {
+        const dmg = Math.max(0, Math.round(amount));
+        addTextPopup(x, y, dmg, {
+          vy: isCrit ? -85 : -65,
+          ttl: 1.0,
+          color: isCrit ? "rgba(255, 72, 72, 1)" : "rgba(255, 255, 255, 1)",
+          fontSize: isCrit ? 20 : 14,
+          bold: Boolean(isCrit),
+        });
+      }
+
+      function addExplosion(x, y, maxR) {
+        state.explosions.push({
+          x,
+          y,
+          maxR: Math.max(0, Number(maxR) || 0),
+          ttl: 0.35,
+          life: 0.35,
+        });
+      }
+
+      function updateFloatingTexts(dtSec) {
+        for (const t of state.floatingTexts) {
+          t.y += t.vy * dtSec;
+          t.ttl -= dtSec;
+        }
+        state.floatingTexts = state.floatingTexts.filter((t) => t.ttl > 0);
+      }
+
+      function updateExplosions(dtSec) {
+        for (const ex of state.explosions) {
+          ex.ttl -= dtSec;
+        }
+        state.explosions = state.explosions.filter((ex) => ex.ttl > 0);
+      }
+
       function resolveHits() {
         const remainingBullets = [];
 
         for (const b of state.bullets) {
-          let hit = false;
+          let hitEnemy = null;
           for (const e of state.enemies) {
             const dx = e.x - b.x;
             const dy = e.y - b.y;
             const rr = e.size / 2 + b.r;
             if (dx * dx + dy * dy <= rr * rr) {
-              e.hp -= b.dmg;
-              hit = true;
+              hitEnemy = e;
               break;
             }
           }
-          if (!hit) remainingBullets.push(b);
+          if (!hitEnemy) {
+            remainingBullets.push(b);
+            continue;
+          }
+
+          const base = Number(b.dmg) || 0;
+          const isCrit = Math.random() < (Number(b.critRate) || 0);
+          const dmg = isCrit ? base * (Number(b.critMultiplier) || 1) : base;
+
+          hitEnemy.hp -= dmg;
+          addFloatingText(hitEnemy.x, hitEnemy.y, dmg, isCrit);
+
+          const splashRadius = Math.max(0, Number(b.splashRadius) || 0);
+          if (splashRadius > 0) {
+            addExplosion(b.x, b.y, splashRadius);
+            const r2 = splashRadius * splashRadius;
+            for (const e of state.enemies) {
+              if (e === hitEnemy) continue;
+              if (e.hp <= 0) continue;
+              const dx = e.x - b.x;
+              const dy = e.y - b.y;
+              if (dx * dx + dy * dy <= r2) {
+                e.hp -= dmg;
+                addFloatingText(e.x, e.y, dmg, isCrit);
+              }
+            }
+          }
         }
 
         state.bullets = remainingBullets;
@@ -1007,7 +1297,7 @@
           if (e.hp <= 0) {
             state.kills += 1;
             state.score += 1;
-            state.gold += e.reward || 1;
+            spawnXpOrb(e.x, e.y, e.xpDrop);
           } else {
             alive.push(e);
           }
@@ -1038,6 +1328,78 @@
         ctx.stroke();
         ctx.restore();
 
+        ctx.save();
+        ctx.font = "700 18px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial";
+        ctx.fillStyle = "rgba(255,255,255,0.88)";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        ctx.shadowColor = "rgba(0,0,0,0.45)";
+        ctx.shadowBlur = 8;
+        ctx.fillText(`Wave: ${state.wave}`, w / 2, 12);
+        ctx.restore();
+
+        const ga = getGridArea();
+        for (let r = 0; r < GRID_SIZE; r++) {
+          for (let c = 0; c < GRID_SIZE; c++) {
+            const idx = rcToIndex(r, c);
+            const cellX = ga.x + c * ga.cell;
+            const cellY = ga.y + r * ga.cell;
+            const tower = state.grid[idx];
+
+            ctx.save();
+            ctx.fillStyle = tower ? "rgba(0,0,0,0.12)" : "rgba(255,255,255,0.035)";
+            ctx.strokeStyle = "rgba(255,255,255,0.10)";
+            ctx.lineWidth = 1;
+            ctx.fillRect(cellX + 1, cellY + 1, ga.cell - 2, ga.cell - 2);
+            ctx.strokeRect(cellX + 1, cellY + 1, ga.cell - 2, ga.cell - 2);
+
+            if (isPlacingMode && !tower) {
+              ctx.strokeStyle = "rgba(55, 210, 115, 0.85)";
+              ctx.lineWidth = 2;
+              ctx.strokeRect(cellX + 2, cellY + 2, ga.cell - 4, ga.cell - 4);
+            }
+            if (isUpgradingMode && tower) {
+              ctx.strokeStyle = "rgba(255, 235, 120, 0.9)";
+              ctx.lineWidth = 2;
+              ctx.strokeRect(cellX + 2, cellY + 2, ga.cell - 4, ga.cell - 4);
+            }
+
+            if (tower) {
+              const pad = Math.max(6, Math.floor(ga.cell * 0.12));
+              const tx = cellX + pad;
+              const ty = cellY + pad;
+              const tw = ga.cell - pad * 2;
+              const th = ga.cell - pad * 2;
+              ctx.fillStyle = towerColor(tower.level);
+              if (ctx.roundRect) {
+                ctx.beginPath();
+                ctx.roundRect(tx, ty, tw, th, 10);
+                ctx.fill();
+              } else {
+                ctx.fillRect(tx, ty, tw, th);
+              }
+              ctx.fillStyle = "rgba(255,255,255,0.96)";
+              ctx.font = "800 18px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial";
+              ctx.textAlign = "center";
+              ctx.textBaseline = "middle";
+              ctx.fillText(String(tower.level), cellX + ga.cell / 2, cellY + ga.cell / 2 + 4);
+            }
+
+            ctx.restore();
+          }
+        }
+
+        for (const o of state.xpOrbs) {
+          ctx.save();
+          ctx.fillStyle = "rgba(55, 210, 115, 0.95)";
+          ctx.shadowColor = "rgba(55, 210, 115, 0.55)";
+          ctx.shadowBlur = 10;
+          ctx.beginPath();
+          ctx.arc(o.x, o.y, 6, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
         for (const b of state.bullets) {
           ctx.save();
           ctx.fillStyle = "rgba(0,0,0,0.88)";
@@ -1049,16 +1411,48 @@
 
         for (const e of state.enemies) {
           ctx.save();
-          ctx.fillStyle = "rgba(255, 90, 106, 0.92)";
+          ctx.fillStyle = e.isBoss ? "rgba(64, 24, 86, 0.92)" : "rgba(255, 90, 106, 0.92)";
           ctx.fillRect(e.x - e.size / 2, e.y - e.size / 2, e.size, e.size);
 
-          const barW = e.size;
-          const barH = 5;
+          const barW = e.size * 1.15;
+          const barH = 6;
           const p = clamp(e.hp / e.hpMax, 0, 1);
-          ctx.fillStyle = "rgba(0,0,0,0.38)";
-          ctx.fillRect(e.x - barW / 2, e.y - e.size / 2 - 10, barW, barH);
-          ctx.fillStyle = "rgba(255,255,255,0.85)";
-          ctx.fillRect(e.x - barW / 2, e.y - e.size / 2 - 10, barW * p, barH);
+          const barX = e.x - barW / 2;
+          const barY = e.y - e.size / 2 - 12;
+          ctx.fillStyle = "rgba(220, 40, 40, 0.9)";
+          ctx.fillRect(barX, barY, barW, barH);
+          ctx.fillStyle = "rgba(55, 210, 115, 0.92)";
+          ctx.fillRect(barX, barY, barW * p, barH);
+          ctx.restore();
+        }
+
+        if (state.wavePhase === "warning") {
+          const alpha = 0.35 + 0.65 * Math.abs(Math.sin(state.bossWarningT * 7));
+          ctx.save();
+          ctx.globalAlpha = alpha;
+          ctx.font = "900 42px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial";
+          ctx.fillStyle = "rgba(255, 55, 55, 1)";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.shadowColor = "rgba(0,0,0,0.7)";
+          ctx.shadowBlur = 12;
+          ctx.fillText("WARNING: BOSS INCOMING!", w / 2, h * 0.42);
+          ctx.restore();
+        }
+
+        for (const ex of state.explosions) {
+          const p = 1 - clamp(ex.ttl / ex.life, 0, 1);
+          const r = (Number(ex.maxR) || 0) * p;
+          const a = clamp(ex.ttl / ex.life, 0, 1);
+          ctx.save();
+          ctx.globalAlpha = a;
+          ctx.fillStyle = "rgba(255, 180, 60, 0.22)";
+          ctx.strokeStyle = "rgba(255, 200, 90, 0.55)";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(ex.x, ex.y, r, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
           ctx.restore();
         }
 
@@ -1073,29 +1467,43 @@
           ctx.fill();
           ctx.restore();
         }
+
+        for (const t of state.floatingTexts) {
+          const a = clamp(t.ttl / t.life, 0, 1);
+          ctx.save();
+          ctx.globalAlpha = a;
+          ctx.font = `${t.bold ? "700 " : ""}${t.fontSize}px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial`;
+          ctx.fillStyle = t.color;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.shadowColor = "rgba(0,0,0,0.55)";
+          ctx.shadowBlur = 4;
+          ctx.fillText(t.text, t.x, t.y);
+          ctx.restore();
+        }
       }
 
       let lastTs = performance.now();
       function frame(ts) {
         const dtMs = clamp(ts - lastTs, 0, 50);
         lastTs = ts;
+        const dtSec = dtMs / 1000;
 
         fitCanvasToCssSize(battleCanvas);
 
         if (state.running && !state.gameOver) {
-          state.timeSec = (ts - state.startedAt) / 1000;
-          state.wave = computeWaveFromTimeSec(state.timeSec);
-          state.highestWave = Math.max(state.highestWave, state.wave);
-          state.spawnIntervalMs = getWaveConfig(state.wave).spawn_interval_ms;
+          state.timeSec += dtSec;
+          updateWaveManagement(dtMs, dtSec);
 
-          spawnEnemies(dtMs);
-
-          const dtSec = dtMs / 1000;
           updateTowers(dtSec);
           updateEnemies(dtSec);
           updateBullets(dtSec);
           resolveHits();
         }
+
+        updateExplosions(dtSec);
+        updateXpOrbs(dtSec);
+        updateFloatingTexts(dtSec);
 
         if (state.gameOver) {
           state.running = false;
@@ -1108,7 +1516,18 @@
         requestAnimationFrame(frame);
       }
 
-      buyBtn.addEventListener("click", () => buyTower());
+      placeBtn.addEventListener("click", () => {
+        if (state.gameOver) return;
+        if (upgradePoints <= 0) return;
+        setPlacingMode(true);
+        syncUI();
+      });
+      upgradeBtn.addEventListener("click", () => {
+        if (state.gameOver) return;
+        if (upgradePoints <= 0) return;
+        setUpgradingMode(true);
+        syncUI();
+      });
 
       saveBtn.addEventListener("click", async () => {
         try {
@@ -1151,15 +1570,18 @@
 
       async function bootstrap() {
         hudLeftEl.textContent = "状态：加载中";
-        buyBtn.disabled = true;
+        placeBtn.disabled = true;
+        upgradeBtn.disabled = true;
         saveBtn.disabled = true;
         pauseBtn.disabled = true;
 
         try {
           gameConfig = await apiFetchJson("/api/config");
-          BUY_COST = Number(gameConfig?.meta?.buy_cost) || BUY_COST;
           START_GOLD = Number(gameConfig?.meta?.start_gold) || START_GOLD;
-          updateBuyButtonLabel();
+          const xpList = gameConfig?.player?.xp_to_next_level;
+          if (Array.isArray(xpList) && xpList.length) {
+            xpToNextLevels = xpList.map((v) => Math.max(1, Math.floor(Number(v) || 1)));
+          }
         } catch (err) {
           gameConfig = null;
           showToast("配置加载失败，使用本地默认值");
@@ -1173,11 +1595,10 @@
           const save = await apiFetchJson(`/api/load/${encodeURIComponent(userId)}`);
           if (save?.exists && save?.grid_data && Array.isArray(save.grid_data)) {
             const wave = Number(save.highest_wave) || 1;
-            const dur = gameConfig?.meta?.wave_duration_sec ?? 12;
-            state.startedAt = performance.now() - Math.max(0, wave - 1) * dur * 1000;
             state.gold = Number(save.coins) || START_GOLD;
-            state.wave = wave;
             state.highestWave = wave;
+            state.timeSec = 0;
+            startWave(wave);
 
             const levels2d = save.grid_data;
             state.grid = Array.from({ length: GRID_SIZE * GRID_SIZE }, () => null);

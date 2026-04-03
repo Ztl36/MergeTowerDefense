@@ -39,20 +39,40 @@ def build_config() -> dict[str, Any]:
     max_tower_level = 5
     towers: dict[str, Any] = {}
     for level in range(1, max_tower_level + 1):
+        splash_radius = 0
+        if level >= 3:
+            splash_radius = 10 + level * 15
         towers[str(level)] = {
             "level": level,
             "damage": 1 + level * 1,
             "fire_rate": 0.75 + level * 0.35,
             "bullet_speed": 520 + level * 35,
-            "upgrade_cost": 10 * level,
+            "splash_radius": splash_radius,
+            "crit_rate": 0.04 + level * 0.03,
+            "crit_multiplier": 1.35 + level * 0.15,
         }
 
     waves: list[dict[str, Any]] = []
     for wave in range(1, 51):
         spawn_interval_ms = max(180, int(900 - (wave - 1) * 14))
-        enemy_hp = 3 + (wave - 1) * 1
-        enemy_speed = 55 + (wave - 1) * 2.4
+        base_enemy_hp = 3 + (wave - 1) * 1
+        base_enemy_speed = 55 + (wave - 1) * 2.4
         kill_reward = 1
+        base_xp_drop = 8 + wave * 3
+        enemy_count = min(8 + wave * 2, 60)
+
+        is_boss = wave % 5 == 0
+        if is_boss:
+            enemy_count = 1
+            enemy_hp = int(base_enemy_hp * 22)
+            enemy_speed = base_enemy_speed * 0.5
+            kill_reward = int(kill_reward * 50)
+            xp_drop = int(base_xp_drop * 25)
+        else:
+            enemy_hp = base_enemy_hp
+            enemy_speed = base_enemy_speed
+            xp_drop = base_xp_drop
+
         waves.append(
             {
                 "wave": wave,
@@ -60,6 +80,9 @@ def build_config() -> dict[str, Any]:
                 "enemy_hp": enemy_hp,
                 "enemy_speed": enemy_speed,
                 "kill_reward": kill_reward,
+                "enemy_count": enemy_count,
+                "is_boss": is_boss,
+                "xp_drop": xp_drop,
             }
         )
 
@@ -71,6 +94,9 @@ def build_config() -> dict[str, Any]:
             "max_tower_level": max_tower_level,
             "default_user_id": "test_user",
             "wave_duration_sec": 12,
+        },
+        "player": {
+            "xp_to_next_level": [100, 250, 500, 1000, 2000],
         },
         "towers": towers,
         "waves": waves,
